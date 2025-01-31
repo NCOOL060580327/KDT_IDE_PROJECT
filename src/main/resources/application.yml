@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: WEB_IDE
+  profiles:
+    active: dev
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: method
+    displayRequestDuration: true
+
+---
+#h2
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  datasource:
+    url: jdbc:h2:mem:test
+    driver-class-name: org.h2.Driver
+    username: test
+    password: test
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+
+---
+#jwt
+jwt:
+  secret: ${JWT_SECRET_KEY}
+  access-token-validity: ${JWT_ACCESS_TOKEN_TIME}
+  refresh-token-validity: ${JWT_REFRESH_TOKEN_TIME}
