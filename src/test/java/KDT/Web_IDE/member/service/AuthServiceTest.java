@@ -1,5 +1,6 @@
 package KDT.Web_IDE.member.service;
 
+import static KDT.Web_IDE.member.constant.MemberTestConstant.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -34,12 +35,6 @@ public class AuthServiceTest {
 
   @Mock private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  private final String TEST_EMAIL = "test";
-  private final String TEST_PASSWORD = "Test1234!@#$";
-  private final String TEST_NICKNAME = "test";
-  private final String TEST_PROFILE = "test";
-  private final String TEST_TOKEN = "test";
-
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this); // Mock 객체 초기화
@@ -51,10 +46,10 @@ public class AuthServiceTest {
     // give
     SignUpMemberRequestDto requestDto =
         SignUpMemberRequestDto.builder()
-            .email(TEST_EMAIL)
-            .password(TEST_PASSWORD)
-            .nickName(TEST_NICKNAME)
-            .profileImage(TEST_PROFILE)
+            .email(ID.getValue())
+            .password(PASSWORD.getValue())
+            .nickName(NICKNAME.getValue())
+            .profileImage(PROFILE.getValue())
             .build();
 
     // when
@@ -76,13 +71,13 @@ public class AuthServiceTest {
       Password password = mock(Password.class);
 
       when(member.getPassword()).thenReturn(password);
-      when(password.isSamePassword(TEST_PASSWORD, bCryptPasswordEncoder)).thenReturn(true);
-      when(member.getId()).thenReturn(1L);
-      when(jwtProvider.generateAccessToken(1L)).thenReturn(TEST_TOKEN);
-      when(jwtProvider.generateRefreshToken(1L)).thenReturn(TEST_TOKEN);
+      when(password.isSamePassword(PASSWORD.getValue(), bCryptPasswordEncoder)).thenReturn(true);
+      when(member.getId()).thenReturn(ID.getValue());
+      when(jwtProvider.generateAccessToken(ID.getValue())).thenReturn(TOKEN.getValue());
+      when(jwtProvider.generateRefreshToken(ID.getValue())).thenReturn(TOKEN.getValue());
 
       // when
-      TokenResponseDto responseDto = authService.loginMember(member, TEST_PASSWORD);
+      TokenResponseDto responseDto = authService.loginMember(member, PASSWORD.getValue());
 
       // then
       assertNotNull(responseDto);
@@ -96,11 +91,12 @@ public class AuthServiceTest {
       Password password = mock(Password.class);
 
       when(member.getPassword()).thenReturn(password);
-      when(password.isSamePassword(TEST_PASSWORD, bCryptPasswordEncoder)).thenReturn(false);
+      when(password.isSamePassword(PASSWORD.getValue(), bCryptPasswordEncoder)).thenReturn(false);
 
       // when
       MemberException memberException =
-          assertThrows(MemberException.class, () -> authService.loginMember(member, TEST_PASSWORD));
+          assertThrows(
+              MemberException.class, () -> authService.loginMember(member, PASSWORD.getValue()));
 
       // then
       assertEquals(memberException.getMessage(), GlobalErrorCode.PASSWORD_MISMATCH.getMessage());
@@ -108,15 +104,16 @@ public class AuthServiceTest {
   }
 
   @Test
-  @DisplayName("RefreshToken을 업데이트한다.")
-  void updateRefreshToken() {
+  @DisplayName("refreshToken을 갱신하고 새 토큰을 발급받는다.")
+  void reissueSuccess() {
     // give
-    Member member = mock(Member.class);
+    Member mockMember = mock(Member.class);
+    when(mockMember.getId()).thenReturn(ID.getValue());
 
     // when
-    authService.updateRefreshToken(member, TEST_TOKEN);
+    TokenResponseDto responseDto = authService.reissue(mockMember);
 
     // then
-    verify(member, times(1)).setRefreshToken(TEST_TOKEN);
+    assertEquals(responseDto.memberId(), ID.getValue());
   }
 }

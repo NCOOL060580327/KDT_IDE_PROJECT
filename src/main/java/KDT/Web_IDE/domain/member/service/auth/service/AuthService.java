@@ -42,7 +42,19 @@ public class AuthService {
     return TokenResponseDto.of(member.getId(), accessToken, refreshToken);
   }
 
-  public void updateRefreshToken(Member member, String refreshToken) {
+  public TokenResponseDto reissue(Member member) {
+
+    Long memberId = member.getId();
+
+    String newAccessToken = jwtProvider.generateAccessToken(memberId);
+    String newRefreshToken = jwtProvider.generateRefreshToken(memberId);
+
+    updateRefreshToken(member, newRefreshToken);
+
+    return TokenResponseDto.of(memberId, newAccessToken, newRefreshToken);
+  }
+
+  private void updateRefreshToken(Member member, String refreshToken) {
     member.setRefreshToken(refreshToken);
   }
 }
