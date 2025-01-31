@@ -37,4 +37,8 @@ public class Password {
   public static Boolean isPasswordValid(String plainPassword) {
     return Pattern.matches((PASSWORD_REGEX), plainPassword);
   }
+
+  public Boolean isSamePassword(String plainPassword, BCryptPasswordEncoder passwordEncoder) {
+    return passwordEncoder.matches(plainPassword, password);
+  }
 }

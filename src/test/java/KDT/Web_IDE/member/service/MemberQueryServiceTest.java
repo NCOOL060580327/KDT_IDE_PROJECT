@@ -48,7 +48,7 @@ public class MemberQueryServiceTest {
         // give
 
         // when
-        Boolean result = memberQueryService.isValidEmail(TEST_EMAIL);
+        Boolean result = memberQueryService.isValidEmail(TEST_EMAIL).isEmpty();
 
         // then
         assertTrue(result);
@@ -61,7 +61,7 @@ public class MemberQueryServiceTest {
         when(memberRepository.findByEmail(TEST_EMAIL)).thenReturn(Optional.of(new Member()));
 
         // when
-        Boolean result = memberQueryService.isValidEmail(TEST_EMAIL);
+        Boolean result = memberQueryService.isValidEmail(TEST_EMAIL).isEmpty();
 
         // then
         assertFalse(result);
@@ -78,7 +78,7 @@ public class MemberQueryServiceTest {
         // give
 
         // when
-        Boolean result = memberQueryService.isValidNickname(TEST_NICKNAME);
+        Boolean result = memberQueryService.isValidNickname(TEST_NICKNAME).isEmpty();
 
         // then
         assertTrue(result);
@@ -91,7 +91,7 @@ public class MemberQueryServiceTest {
         when(memberRepository.findByNickName(TEST_NICKNAME)).thenReturn(Optional.of(new Member()));
 
         // when
-        Boolean result = memberQueryService.isValidNickname(TEST_NICKNAME);
+        Boolean result = memberQueryService.isValidNickname(TEST_NICKNAME).isEmpty();
 
         // then
         assertFalse(result);

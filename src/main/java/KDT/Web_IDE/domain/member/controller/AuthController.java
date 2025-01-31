@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import KDT.Web_IDE.domain.member.dto.request.LoginMemberRequestDto;
 import KDT.Web_IDE.domain.member.dto.request.SignUpMemberRequestDto;
+import KDT.Web_IDE.domain.member.dto.response.TokenResponseDto;
 import KDT.Web_IDE.domain.member.service.auth.facade.AuthFacade;
 import KDT.Web_IDE.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +23,10 @@ public class AuthController {
   public BaseResponse<Void> signUpMember(@RequestBody SignUpMemberRequestDto requestDto) {
     authFacade.signUpMember(requestDto);
     return BaseResponse.onSuccess(null);
+  }
+
+  @PostMapping("/login")
+  public BaseResponse<TokenResponseDto> loginMember(@RequestBody LoginMemberRequestDto requestDto) {
+    return BaseResponse.onSuccess(authFacade.loginMember(requestDto));
   }
 }

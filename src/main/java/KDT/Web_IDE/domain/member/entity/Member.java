@@ -34,7 +34,7 @@ public class Member {
   @Enumerated(EnumType.STRING)
   private MemberRole roles;
 
-  private String refreshToken;
+  @Setter private String refreshToken;
 
   public Member toEntity(SignUpMemberRequestDto requestDto, MemberRole roles) {
 

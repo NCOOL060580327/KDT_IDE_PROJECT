@@ -11,6 +11,7 @@ public enum GlobalErrorCode {
 
   // 400 BAD_REQUEST - 잘못된 요청
   NOT_VALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호는 영문, 숫자, 특수문자를 포함한 9~16글자여야 합니다."),
+  PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
 
   // 401 Unauthorized - 미인증
   TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "토큰의 유효기간이 지났습니다."),

@@ -2,7 +2,10 @@ package KDT.Web_IDE.domain.member.service.auth.facade;
 
 import org.springframework.stereotype.Component;
 
+import KDT.Web_IDE.domain.member.dto.request.LoginMemberRequestDto;
 import KDT.Web_IDE.domain.member.dto.request.SignUpMemberRequestDto;
+import KDT.Web_IDE.domain.member.dto.response.TokenResponseDto;
+import KDT.Web_IDE.domain.member.entity.Member;
 import KDT.Web_IDE.domain.member.service.auth.service.AuthService;
 import KDT.Web_IDE.domain.member.service.auth.service.MemberQueryService;
 import KDT.Web_IDE.global.exception.GlobalErrorCode;
@@ -18,14 +21,30 @@ public class AuthFacade {
 
   public void signUpMember(SignUpMemberRequestDto requestDto) {
 
-    if (!memberQueryService.isValidEmail(requestDto.email())) {
-      throw new MemberException(GlobalErrorCode.DUPLICATE_EMAIL);
-    }
+    memberQueryService
+        .isValidEmail(requestDto.email())
+        .ifPresent(
+            e -> {
+              throw new MemberException(GlobalErrorCode.DUPLICATE_EMAIL);
+            });
 
-    if (!memberQueryService.isValidNickname(requestDto.nickName())) {
-      throw new MemberException(GlobalErrorCode.DUPLICATE_NICKNAME);
-    }
+    memberQueryService
+        .isValidNickname(requestDto.nickName())
+        .ifPresent(
+            e -> {
+              throw new MemberException(GlobalErrorCode.DUPLICATE_NICKNAME);
+            });
 
     authService.signUpMember(requestDto);
+  }
+
+  public TokenResponseDto loginMember(LoginMemberRequestDto requestDto) {
+
+    Member member =
+        memberQueryService
+            .isValidEmail(requestDto.email())
+            .orElseThrow(() -> new MemberException(GlobalErrorCode.MEMBER_NOT_FOUND));
+
+    return authService.loginMember(member, requestDto.password());
   }
 }

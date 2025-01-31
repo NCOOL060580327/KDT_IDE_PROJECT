@@ -1,14 +1,17 @@
 package KDT.Web_IDE.domain.member.service.auth.service;
 
-import jakarta.validation.Valid;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import KDT.Web_IDE.domain.member.dto.request.SignUpMemberRequestDto;
+import KDT.Web_IDE.domain.member.dto.response.TokenResponseDto;
 import KDT.Web_IDE.domain.member.entity.Member;
 import KDT.Web_IDE.domain.member.entity.MemberRole;
 import KDT.Web_IDE.domain.member.entity.repository.MemberRepository;
+import KDT.Web_IDE.global.exception.GlobalErrorCode;
+import KDT.Web_IDE.global.exception.custom.MemberException;
+import KDT.Web_IDE.global.security.provider.JwtProvider;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -18,7 +21,28 @@ public class AuthService {
 
   private final MemberRepository memberRepository;
 
-  public void signUpMember(@Valid SignUpMemberRequestDto requestDto) {
+  private final JwtProvider jwtProvider;
+  private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+  public void signUpMember(SignUpMemberRequestDto requestDto) {
     memberRepository.save(new Member().toEntity(requestDto, MemberRole.USER));
+  }
+
+  public TokenResponseDto loginMember(Member member, String password) {
+
+    if (!(member.getPassword().isSamePassword(password, bCryptPasswordEncoder))) {
+      throw new MemberException(GlobalErrorCode.PASSWORD_MISMATCH);
+    }
+
+    String accessToken = jwtProvider.generateAccessToken(member.getId());
+    String refreshToken = jwtProvider.generateRefreshToken(member.getId());
+
+    updateRefreshToken(member, refreshToken);
+
+    return TokenResponseDto.of(member.getId(), accessToken, refreshToken);
+  }
+
+  public void updateRefreshToken(Member member, String refreshToken) {
+    member.setRefreshToken(refreshToken);
   }
 }
