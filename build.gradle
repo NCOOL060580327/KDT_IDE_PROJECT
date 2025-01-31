@@ -44,6 +44,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	// validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 	// jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
@@ -60,15 +63,26 @@ dependencies {
 
 	// h2
 	runtimeOnly 'com.h2database:h2'
+	testImplementation 'com.h2database:h2'
 
 	// swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
 
+	// jwt
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+
+	// junit5
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+	outputs.dir snippetsDir
+	jvmArgs "-Xshare:off"
 }
 
 tasks.named('compileJava') {
