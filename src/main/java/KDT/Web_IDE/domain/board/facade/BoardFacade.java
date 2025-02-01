@@ -6,13 +6,16 @@ import KDT.Web_IDE.domain.board.dto.request.CreateBoardRequestDto;
 import KDT.Web_IDE.domain.board.dto.request.UpdateBoardRequestDto;
 import KDT.Web_IDE.domain.board.dto.response.GetBoardResponseDto;
 import KDT.Web_IDE.domain.board.entity.Board;
+import KDT.Web_IDE.domain.board.entity.BoardUser;
 import KDT.Web_IDE.domain.board.service.BoardCommandService;
 import KDT.Web_IDE.domain.board.service.BoardQueryService;
 import KDT.Web_IDE.domain.board.service.BoardUserCommandService;
 import KDT.Web_IDE.domain.board.service.BoardUserQueryService;
+import KDT.Web_IDE.domain.chat.entity.ChatRoom;
+import KDT.Web_IDE.domain.chat.service.ChatRoomCommandService;
+import KDT.Web_IDE.domain.chat.service.ChatRoomMemberCommandService;
 import KDT.Web_IDE.domain.member.entity.Member;
 import KDT.Web_IDE.domain.member.service.service.MemberQueryService;
-import KDT.Web_IDE.global.security.provider.JwtProvider;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -24,17 +27,22 @@ public class BoardFacade {
   private final BoardQueryService boardQueryService;
   private final BoardUserQueryService boardUserQueryService;
 
+  private final ChatRoomCommandService chatRoomCommandService;
+  private final ChatRoomMemberCommandService chatRoomMemberCommandService;
+
   private final MemberQueryService memberQueryService;
 
-  private final JwtProvider jwtProvider;
+  public void createBoard(CreateBoardRequestDto requestDto, Long memberId) {
 
-  public void createBoard(CreateBoardRequestDto requestDto, Long token) {
-
-    Member member = memberQueryService.getMemberById(token);
+    Member member = memberQueryService.getMemberById(memberId);
 
     Board board = boardCommandService.createBoard(requestDto);
 
-    boardUserCommandService.createBoardUser(board, member, true);
+    ChatRoom chatRoom = chatRoomCommandService.creatChatRoom(board);
+
+    BoardUser boardUser = boardUserCommandService.createBoardUser(board, member, true);
+
+    chatRoomMemberCommandService.createChatRoomMember(boardUser, chatRoom);
   }
 
   public void updateBoard(UpdateBoardRequestDto requestDto, Long boardId, Long memberId) {

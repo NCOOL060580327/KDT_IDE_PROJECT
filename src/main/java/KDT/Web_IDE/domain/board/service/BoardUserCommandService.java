@@ -16,8 +16,8 @@ public class BoardUserCommandService {
 
   private final BoardUserRepository boardUserRepository;
 
-  public void createBoardUser(Board board, Member member, Boolean isLeader) {
-    boardUserRepository.save(
+  public BoardUser createBoardUser(Board board, Member member, Boolean isLeader) {
+    return boardUserRepository.save(
         BoardUser.builder().board(board).member(member).isLeader(isLeader).build());
   }
 }
