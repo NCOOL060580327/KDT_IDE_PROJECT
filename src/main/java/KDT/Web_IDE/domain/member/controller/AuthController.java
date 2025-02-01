@@ -6,7 +6,7 @@ import KDT.Web_IDE.domain.member.dto.request.LoginMemberRequestDto;
 import KDT.Web_IDE.domain.member.dto.request.ReissueRequestDto;
 import KDT.Web_IDE.domain.member.dto.request.SignUpMemberRequestDto;
 import KDT.Web_IDE.domain.member.dto.response.TokenResponseDto;
-import KDT.Web_IDE.domain.member.service.auth.facade.AuthFacade;
+import KDT.Web_IDE.domain.member.service.facade.AuthFacade;
 import KDT.Web_IDE.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 

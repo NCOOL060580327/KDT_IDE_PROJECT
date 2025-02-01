@@ -1,4 +1,4 @@
-package KDT.Web_IDE.domain.member.service.auth.service;
+package KDT.Web_IDE.domain.member.service.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

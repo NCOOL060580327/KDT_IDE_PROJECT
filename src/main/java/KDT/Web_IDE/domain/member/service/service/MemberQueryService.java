@@ -1,4 +1,4 @@
-package KDT.Web_IDE.domain.member.service.auth.service;
+package KDT.Web_IDE.domain.member.service.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

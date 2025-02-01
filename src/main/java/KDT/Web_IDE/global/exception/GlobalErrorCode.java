@@ -21,11 +21,14 @@ public enum GlobalErrorCode {
 
   // 403 Forbidden - 권한 없음
   ACCESS_DENIED(HttpStatus.FORBIDDEN, "권한이 없습니다."),
+  NOT_IN_BOARD(HttpStatus.FORBIDDEN, "게시판 유저가 아닙니다."),
+  NOT_LEADER(HttpStatus.FORBIDDEN, "수정 권한이 없습니다."),
 
   // 404 NotFound - 찾을 수 없음
   MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "등록된 사용자가 없습니다."),
+  BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "게시판을 찾을 수 없습니다."),
 
-  // 409
+  // 409 Conflict - 충돌
   DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 등록된 이메일입니다."),
   DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "이미 등록된 닉네임입니다.");
 
