@@ -34,4 +34,14 @@ public interface ChatRoomMemberRepository extends JpaRepository<ChatRoomMember, 
     """)
   List<ChatRoomMember> getChatRoomMemberListByChatRoomIdAndMemberId(
       @Param("chatRoomId") Long chatRoomId, @Param("senderId") Long senderId);
+
+  @Modifying
+  @Query(
+      """
+           UPDATE ChatRoomMember crm
+           SET crm.notReadCount = 0
+           WHERE crm.chatRoom.id = :chatRoomId
+           AND crm.member.id = :memberId
+    """)
+  void resetNotReadCount(@Param("chatRoomId") Long chatRoomId, @Param("memberId") Long memberId);
 }

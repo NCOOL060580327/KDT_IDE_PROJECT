@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import KDT.Web_IDE.domain.chat.dto.request.SendChatMessageRequestDto;
+import KDT.Web_IDE.domain.chat.dto.response.GetChatMessageResponseDto;
 import KDT.Web_IDE.domain.chat.entity.ChatRoomMember;
 import KDT.Web_IDE.domain.chat.service.*;
 import KDT.Web_IDE.domain.member.entity.Member;
@@ -19,7 +20,6 @@ public class ChatFacade {
 
   private final ChatMessageCommandService chatMessageCommandService;
   private final ChatMessageQueryService chatMessageQueryService;
-  private final ChatRoomCommandService chatRoomCommandService;
   private final ChatRoomQueryService chatRoomQueryService;
   private final ChatRoomMemberCommandService chatRoomMemberCommandService;
   private final ChatRoomMemberQueryService chatRoomMemberQueryService;
@@ -50,5 +50,19 @@ public class ChatFacade {
             chatRoomId, member.getId());
 
     messageService.sendUnreadMessageCount(chatRoomList);
+  }
+
+  public List<GetChatMessageResponseDto> getChatMessageList(Long chatRoomId, Long memberId) {
+
+    chatRoomQueryService.getChatRoomById(chatRoomId);
+
+    Member member = memberQueryService.getMemberById(memberId);
+
+    List<GetChatMessageResponseDto> responseDtoList =
+        chatMessageQueryService.getChatMessageList(chatRoomId, member);
+
+    chatRoomMemberCommandService.resetNotReadCount(chatRoomId, memberId);
+
+    return responseDtoList;
   }
 }

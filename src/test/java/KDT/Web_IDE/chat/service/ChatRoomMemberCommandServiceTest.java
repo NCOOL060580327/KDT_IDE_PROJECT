@@ -55,4 +55,14 @@ public class ChatRoomMemberCommandServiceTest {
     // then
     verify(chatRoomMemberRepository, times(1)).increaseNotReadCount(ID.getValue(), ID.getValue());
   }
+
+  @Test
+  @DisplayName("메세지를 조회한 사용자의 NotReadCount를 0으로 초기화한다.")
+  void resetNotReadCountSuccess() {
+    // when
+    chatRoomMemberCommandService.resetNotReadCount(ID.getValue(), ID.getValue());
+
+    // then
+    verify(chatRoomMemberRepository, times(1)).resetNotReadCount(ID.getValue(), ID.getValue());
+  }
 }

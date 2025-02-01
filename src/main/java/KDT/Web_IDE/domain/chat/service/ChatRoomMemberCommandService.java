@@ -24,4 +24,8 @@ public class ChatRoomMemberCommandService {
   public void increaseNotReadCount(Long chatRoomId, Long senderId) {
     chatRoomMemberRepository.increaseNotReadCount(chatRoomId, senderId);
   }
+
+  public void resetNotReadCount(Long chatRoomId, Long memberId) {
+    chatRoomMemberRepository.resetNotReadCount(chatRoomId, memberId);
+  }
 }
