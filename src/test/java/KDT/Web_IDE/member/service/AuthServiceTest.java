@@ -19,7 +19,7 @@ import KDT.Web_IDE.domain.member.dto.response.TokenResponseDto;
 import KDT.Web_IDE.domain.member.entity.Member;
 import KDT.Web_IDE.domain.member.entity.Password;
 import KDT.Web_IDE.domain.member.entity.repository.MemberRepository;
-import KDT.Web_IDE.domain.member.service.auth.service.AuthService;
+import KDT.Web_IDE.domain.member.service.service.AuthService;
 import KDT.Web_IDE.global.exception.GlobalErrorCode;
 import KDT.Web_IDE.global.exception.custom.MemberException;
 import KDT.Web_IDE.global.security.provider.JwtProvider;
@@ -63,13 +63,13 @@ public class AuthServiceTest {
   @DisplayName("로그인을 할 때 이메일과")
   class loginMember {
 
+    Member member = mock(Member.class);
+    Password password = mock(Password.class);
+
     @Test
     @DisplayName("비밀번호가 일치하면 로그인 성공 및 토큰을 반환한다.")
     void loginMemberSuccess() {
       // give
-      Member member = mock(Member.class);
-      Password password = mock(Password.class);
-
       when(member.getPassword()).thenReturn(password);
       when(password.isSamePassword(PASSWORD.getValue(), bCryptPasswordEncoder)).thenReturn(true);
       when(member.getId()).thenReturn(ID.getValue());
@@ -87,9 +87,6 @@ public class AuthServiceTest {
     @DisplayName("비밀번호가 일치하지 않으면 예외를 발생한다.")
     void loginMemberFailWhenPasswordWrong() {
       // give
-      Member member = mock(Member.class);
-      Password password = mock(Password.class);
-
       when(member.getPassword()).thenReturn(password);
       when(password.isSamePassword(PASSWORD.getValue(), bCryptPasswordEncoder)).thenReturn(false);
 

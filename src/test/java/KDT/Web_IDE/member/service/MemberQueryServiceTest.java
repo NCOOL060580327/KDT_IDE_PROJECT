@@ -18,7 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import KDT.Web_IDE.domain.member.entity.Member;
 import KDT.Web_IDE.domain.member.entity.repository.MemberRepository;
-import KDT.Web_IDE.domain.member.service.auth.service.MemberQueryService;
+import KDT.Web_IDE.domain.member.service.service.MemberQueryService;
 import KDT.Web_IDE.global.exception.GlobalErrorCode;
 import KDT.Web_IDE.global.exception.custom.MemberException;
 

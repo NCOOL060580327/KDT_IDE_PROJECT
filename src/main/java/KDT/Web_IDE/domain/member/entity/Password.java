@@ -8,7 +8,7 @@ import jakarta.persistence.Embeddable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import KDT.Web_IDE.global.exception.GlobalErrorCode;
-import KDT.Web_IDE.global.exception.GlobalException;
+import KDT.Web_IDE.global.exception.custom.AuthException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class Password {
 
   public static Password encryptPassword(String plainPassword, BCryptPasswordEncoder encoder) {
     if (!isPasswordValid(plainPassword)) {
-      throw new GlobalException(GlobalErrorCode.NOT_VALID_PASSWORD);
+      throw new AuthException(GlobalErrorCode.NOT_VALID_PASSWORD);
     }
 
     return new Password(encoder.encode(plainPassword));
