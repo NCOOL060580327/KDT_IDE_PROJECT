@@ -1,6 +1,8 @@
 package KDT.Web_IDE.global.security.provider;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
@@ -58,6 +60,18 @@ public class JwtProvider {
 
   private Jws<Claims> getClaims(String token) {
     return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+  }
+
+  public LocalDateTime getExpiredAt(String token) {
+    return Jwts.parserBuilder()
+        .setSigningKey(secretKey)
+        .build()
+        .parseClaimsJws(token)
+        .getBody()
+        .getExpiration()
+        .toInstant()
+        .atZone(ZoneId.systemDefault())
+        .toLocalDateTime();
   }
 
   public Boolean isValidToken(String token) {

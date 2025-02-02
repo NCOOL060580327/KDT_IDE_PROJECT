@@ -7,6 +7,8 @@ import KDT.Web_IDE.domain.member.dto.request.ReissueRequestDto;
 import KDT.Web_IDE.domain.member.dto.request.SignUpMemberRequestDto;
 import KDT.Web_IDE.domain.member.dto.response.TokenResponseDto;
 import KDT.Web_IDE.domain.member.entity.Member;
+import KDT.Web_IDE.domain.member.entity.RefreshToken;
+import KDT.Web_IDE.domain.member.entity.repository.RefreshTokenRepository;
 import KDT.Web_IDE.domain.member.service.service.AuthService;
 import KDT.Web_IDE.domain.member.service.service.MemberQueryService;
 import KDT.Web_IDE.global.security.provider.JwtProvider;
@@ -19,6 +21,7 @@ public class AuthFacade {
   private final AuthService authService;
   private final MemberQueryService memberQueryService;
   private final JwtProvider jwtProvider;
+  private final RefreshTokenRepository refreshTokenRepository;
 
   public void signUpMember(SignUpMemberRequestDto requestDto) {
 
@@ -42,6 +45,8 @@ public class AuthFacade {
 
     Member member = memberQueryService.getMemberById(memberId);
 
-    return authService.reissue(member);
+    RefreshToken refreshToken = authService.getRefreshTokenByMemberId(memberId);
+
+    return authService.reissue(member, refreshToken);
   }
 }

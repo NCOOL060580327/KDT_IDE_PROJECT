@@ -34,8 +34,6 @@ public class Member {
   @Enumerated(EnumType.STRING)
   private MemberRole roles;
 
-  @Setter private String refreshToken;
-
   public Member toEntity(SignUpMemberRequestDto requestDto, MemberRole roles) {
 
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
