@@ -4,6 +4,8 @@ import static KDT.Web_IDE.member.constant.MemberTestConstant.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,9 +20,12 @@ import KDT.Web_IDE.domain.member.dto.request.SignUpMemberRequestDto;
 import KDT.Web_IDE.domain.member.dto.response.TokenResponseDto;
 import KDT.Web_IDE.domain.member.entity.Member;
 import KDT.Web_IDE.domain.member.entity.Password;
+import KDT.Web_IDE.domain.member.entity.RefreshToken;
 import KDT.Web_IDE.domain.member.entity.repository.MemberRepository;
+import KDT.Web_IDE.domain.member.entity.repository.RefreshTokenRepository;
 import KDT.Web_IDE.domain.member.service.service.AuthService;
 import KDT.Web_IDE.global.exception.GlobalErrorCode;
+import KDT.Web_IDE.global.exception.custom.AuthException;
 import KDT.Web_IDE.global.exception.custom.MemberException;
 import KDT.Web_IDE.global.security.provider.JwtProvider;
 
@@ -30,6 +35,8 @@ public class AuthServiceTest {
   @InjectMocks private AuthService authService;
 
   @Mock private MemberRepository memberRepository;
+
+  @Mock private RefreshTokenRepository refreshTokenRepository;
 
   @Mock private JwtProvider jwtProvider;
 
@@ -105,12 +112,48 @@ public class AuthServiceTest {
   void reissueSuccess() {
     // give
     Member mockMember = mock(Member.class);
+    RefreshToken mockRefreshToken = mock(RefreshToken.class);
+
     when(mockMember.getId()).thenReturn(ID.getValue());
 
     // when
-    TokenResponseDto responseDto = authService.reissue(mockMember);
+    TokenResponseDto responseDto = authService.reissue(mockMember, mockRefreshToken);
 
     // then
     assertEquals(responseDto.memberId(), ID.getValue());
+  }
+
+  @Nested
+  @DisplayName("refreshToken을 조회할 때")
+  class getRefreshTokenByMemberId {
+    @Test
+    @DisplayName("회원 아이디를 통해 조회한다.")
+    void getRefreshTokenByMemberIdSuccess() {
+      // give
+      RefreshToken mockRefreshToken = mock(RefreshToken.class);
+      when(refreshTokenRepository.findByMember_Id(ID.getValue()))
+          .thenReturn(Optional.of(mockRefreshToken));
+
+      // when
+      authService.getRefreshTokenByMemberId(ID.getValue());
+
+      // then
+      verify(refreshTokenRepository, times(1)).findByMember_Id(ID.getValue());
+    }
+
+    @Test
+    @DisplayName("없으면 예외를 발생시킨다.")
+    void getRefreshTokenByMemberIdThrowException() {
+      // give
+      when(refreshTokenRepository.findByMember_Id(ID.getValue())).thenReturn(Optional.empty());
+
+      // when
+      AuthException authException =
+          assertThrows(
+              AuthException.class, () -> authService.getRefreshTokenByMemberId(ID.getValue()));
+
+      // then
+      assertEquals(authException.getErrorCode(), GlobalErrorCode.INVALID_TOKEN);
+    }
   }
 }
