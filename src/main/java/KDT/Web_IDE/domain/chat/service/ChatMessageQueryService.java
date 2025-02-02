@@ -19,7 +19,8 @@ public class ChatMessageQueryService {
 
   public List<GetChatMessageResponseDto> getChatMessageList(Long chatRoomId, Member member) {
     return chatMessageRepository
-        .getChatMessageByChatRoomIdAndMemberId(chatRoomId, member.getId())
+        .findByChatRoomIdAndSenderIdOrderBySendTimeDesc(
+            chatRoomId.toString(), member.getId().toString())
         .stream()
         .map(chatMessage -> GetChatMessageResponseDto.of(chatMessage, member))
         .toList();

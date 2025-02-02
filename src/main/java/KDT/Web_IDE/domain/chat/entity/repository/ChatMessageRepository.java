@@ -2,22 +2,12 @@ package KDT.Web_IDE.domain.chat.entity.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import KDT.Web_IDE.domain.chat.entity.ChatMessage;
 
-public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
+public interface ChatMessageRepository extends MongoRepository<ChatMessage, String> {
 
-  @Query(
-      """
-    SELECT cm
-    FROM ChatMessage cm
-    WHERE cm.chatRoomMember.chatRoom.id = :chatRoomId
-    AND cm.chatRoomMember.member.id = :memberId
-    ORDER BY cm.sendTime DESC
-    """)
-  List<ChatMessage> getChatMessageByChatRoomIdAndMemberId(
-      @Param("chatRoomId") Long chatRoomId, @Param("memberId") Long memberId);
+  List<ChatMessage> findByChatRoomIdAndSenderIdOrderBySendTimeDesc(
+      String chatRoomId, String memberId);
 }

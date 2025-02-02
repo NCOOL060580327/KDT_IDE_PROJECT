@@ -29,6 +29,7 @@ public interface ChatRoomMemberRepository extends JpaRepository<ChatRoomMember, 
         SELECT crm
         FROM ChatRoomMember crm
         JOIN FETCH crm.member
+        JOIN FETCH crm.chatRoom
         WHERE crm.chatRoom.id = :chatRoomId
         AND crm.member.id != :senderId
     """)
