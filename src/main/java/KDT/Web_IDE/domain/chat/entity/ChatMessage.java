@@ -5,33 +5,27 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "chat_message")
+@Document(collection = "chat_message")
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class ChatMessage {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "chat_message_id")
-  private Long id;
+  @Id private String id;
 
-  @Column(columnDefinition = "LONGTEXT")
   private String content;
 
-  @CreatedDate
-  @Column(name = "send_time", updatable = false)
-  private LocalDateTime sendTime;
+  @CreatedDate private LocalDateTime sendTime;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "chat_room_member_id")
-  private ChatRoomMember chatRoomMember;
+  private String chatRoomId;
+
+  private String senderId;
 }

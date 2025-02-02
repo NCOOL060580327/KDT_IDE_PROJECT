@@ -29,6 +29,13 @@ spring:
       ddl-auto: create
 
 ---
+spring:
+  data:
+    mongodb:
+      uri: ${MONGO_URL}
+      database: chat
+
+---
 #jwt
 jwt:
   secret: ${JWT_SECRET_KEY}

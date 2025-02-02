@@ -18,13 +18,14 @@ public class ChatMessageCommandService {
 
   private final ChatMessageRepository chatMessageRepository;
 
-  public ChatMessage createChatMessage(
+  public void createChatMessage(
       ChatRoomMember chatRoomMember, SendChatMessageRequestDto requestDto) {
-    return chatMessageRepository.save(
+    chatMessageRepository.save(
         ChatMessage.builder()
             .content(requestDto.content())
             .sendTime(LocalDateTime.now())
-            .chatRoomMember(chatRoomMember)
+            .chatRoomId(chatRoomMember.getChatRoom().getId().toString())
+            .senderId(chatRoomMember.getMember().getId().toString())
             .build());
   }
 }
